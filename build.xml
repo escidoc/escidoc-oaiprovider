@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="oaiprovider" default="dist" basedir=".">
+
+  <loadproperties srcFile="build.properties"/>
+
+  <property name="oaiprovider.version" value="1.2"/>
+
+  <path id="base.path">
+  	<pathelement location="${lib.jodatime}"/>
+    <pathelement location="${lib.jrdf}"/>
+    <pathelement location="${lib.trippi}"/>
+    <pathelement location="${lib.xmlpull}"/>
+    <pathelement location="${lib.xpp}"/>
+    <pathelement location="${lib.httpclient}"/>
+    <pathelement location="${lib.codec}"/>
+    <pathelement location="${lib.logging}"/>
+    <pathelement location="${lib.log4j}"/>
+    <pathelement location="${lib.xerces}"/>
+    <pathelement location="${lib.xml-apis}"/>
+    <pathelement location="${lib.axis}"/>
+    <pathelement location="${lib.activation}"/>
+    <pathelement location="${lib.wsdl4j}"/>
+    <pathelement location="${lib.discovery}"/>
+    <pathelement location="${lib.dbcp}"/>
+    <pathelement location="${lib.collections}"/>
+    <pathelement location="${lib.pool}"/>
+    <pathelement location="${lib.fedoraclient}"/>
+    <pathelement location="${lib.saaj}"/>
+    <pathelement location="${lib.jaxrpc}"/>
+    <pathelement location="${lib.proai}"/>
+    <pathelement location="${lib.mysqljdbc}"/>
+    <pathelement location="${lib.postgresjdbc}"/>
+    <pathelement location="${lib.bvalid}"/>
+  	<pathelement location="${lib.mptstore}"/>
+  </path>
+
+  <path id="compile.path">
+    <path refid="base.path"/>
+    <pathelement location="${lib.junit}"/>
+  </path>
+
+  <path id="compiletests.path">
+    <path refid="compile.path"/>
+    <pathelement location="build/classes"/>
+  </path>
+
+  <path id="test.path">
+    <path refid="compiletests.path"/>
+    <pathelement location="build/testclasses"/>
+  </path>
+
+  <target name="binrelease" depends="dist, doc">
+    <copy todir="dist/release/escidoc-oaiprovider-${oaiprovider.version}">
+      <fileset dir="dist">
+        <exclude name="release/**"/>
+      </fileset>
+    </copy>
+    <zip zipfile="dist/release/escidoc-oaiprovider-${oaiprovider.version}.zip" basedir="dist/release" includes="oaiprovider-${oaiprovider.version}/**"/>
+    <delete dir="dist/release/oaiprovider-${oaiprovider.version}"/>
+  </target>
+
+  <target name="srcrelease" depends="clean">
+    <copy todir="dist/release/oaiprovider-${oaiprovider.version}-src">
+      <fileset dir=".">
+        <exclude name="dist/**"/>
+      </fileset>
+    </copy>
+    <zip zipfile="dist/release/escidoc-oaiprovider-${oaiprovider.version}-src.zip" basedir="dist/release" includes="oaiprovider-${oaiprovider.version}-src/**"/>
+    <delete dir="dist/release/oaiprovider-${oaiprovider.version}-src"/>
+  </target>
+
+  <target name="release" depends="srcrelease,binrelease" description="Build the source and binary distributions in dist/release">
+    <checksum fileext=".md5">
+      <fileset dir="dist/release">
+        <include name="*.zip"/>
+      </fileset>
+    </checksum>
+  </target>
+
+  <target name="classes" 
+          depends="prep"
+          description="build all java classes into build/">
+    <mkdir dir="build/classes"/>
+    <javac srcdir="src/java" destdir="build/classes" 
+           includes="**" 
+           classpathref="compile.path"
+           optimize="${optimize}" debug="${debug}"/>
+    <copy todir="build/classes">
+      <fileset dir="src/config"/>
+    </copy>
+  </target>
+
+  <target name="testclasses"
+          depends="classes">
+    <mkdir dir="build/testclasses"/>
+    <javac srcdir="src/test/junit" destdir="build/testclasses" 
+           includes="**" 
+           classpathref="compiletests.path"
+           optimize="${optimize}" debug="${debug}"/>
+  </target>
+
+  <target name="testobjects"
+          depends="testclasses">
+    <java classname="fedora.services.oaiprovider.GenerateTestObjects">
+      <arg value="src/test/foxml"/>
+      <arg value="2500"/>
+      <classpath>
+        <pathelement location="build/testclasses"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="dist" 
+          depends="classes" 
+          description="Build the distribution in dist/">
+    <copy todir="build/webapp">
+      <fileset dir="src/webapp"/>
+    </copy>
+    <mkdir dir="build/webapp/WEB-INF/classes"/>
+    <copy todir="build/webapp/WEB-INF/classes">
+      <fileset dir="build/classes"/>
+    </copy>
+    <mkdir dir="build/webapp/WEB-INF/lib"/>
+    <copy todir="build/webapp/WEB-INF/lib">
+      <fileset dir="lib">
+        <exclude name="junit.jar"/>
+      </fileset>
+    </copy>
+    <jar jarfile="dist/escidoc-oaiprovider.war" basedir="build/webapp"/>
+  </target>
+	<target name="deployTomcat" depends="dist">
+				<delete dir="C:/apache-tomcat-5.5.26/webapps/escidoc-oaiprovider" />
+				<delete file="C:/apache-tomcat-5.5.26/webapps/escidoc-oaiprovider.war" />
+				<copy file="dist/escidoc-oaiprovider.war" todir="C:/apache-tomcat-5.5.26/webapps" />
+			</target>
+  <target name="javadoc"
+          depends="prep"
+	      description="Build the documentation in dist/doc/api">
+    <javadoc packagenames="escidoc.services.oaiprovider.*"
+           classpathref="compile.path"
+           sourcepath="src/java"
+           defaultexcludes="yes"
+           destdir="dist/doc/api"
+           use="true"
+           windowtitle="Escidoc OAI Provider Javadocs">
+      <doctitle><![CDATA[<h1>Escidoc OAI Provider Javadocs</h1>]]></doctitle>
+    </javadoc>
+  </target>
+
+  <target name="doc" depends="prep" description="Build the user docs in dist/doc">
+    <mkdir dir="dist/doc"/> 
+    <copy todir="dist/doc">
+      <fileset dir="src/doc"/>
+    </copy>
+    <java classpath="${lib.propstodocs}" classname="PropsToDocs" output="dist/doc/configuration.html">
+      <arg path="src/config/proai.properties"/>
+    </java>
+  </target>
+
+  <target name="test" description="Run tests" depends="testclasses">
+    <!-- 
+      For this task to run, prior to running ant, set CLASSPATH=lib\junit.jar
+    -->
+    <junit printsummary="yes" fork="yes" forkmode="once" haltonfailure="yes" showoutput="true">
+      <formatter type="plain" usefile="false"/> 
+      <classpath refid="test.path"/>
+      <sysproperty key="driver.fedora.baseURL" value="http://localhost:8080/fedora/"/>
+      <sysproperty key="driver.fedora.user" value="fedoraAdmin"/>
+      <sysproperty key="driver.fedora.pass" value="fedoraAdmin"/>
+      <sysproperty key="driver.fedora.identify" value="http://localhost:8080/fedora/get/demo:MyRepository/Identify.xml"/>
+      <sysproperty key="driver.fedora.md.formats" value="oai_dc"/>
+      <sysproperty key="driver.fedora.md.format.oai_dc.loc" value="http://www.openarchives.org/OAI/2.0/oai_dc.xsd"/>
+      <sysproperty key="driver.fedora.md.format.oai_dc.uri" value="http://www.openarchives.org/OAI/2.0/oai_dc/"/>
+      <sysproperty key="driver.fedora.md.format.oai_dc.dissType" value="info:fedora/*/oai_dc"/>
+      <sysproperty key="driver.fedora.itemID" value="http://www.openarchives.org/OAI/2.0/itemID"/>
+      <sysproperty key="driver.fedora.setSpec" value="http://www.openarchives.org/OAI/2.0/setSpec"/>
+      <sysproperty key="driver.fedora.setSpec.name" value="http://www.openarchives.org/OAI/2.0/setName"/>
+      <sysproperty key="driver.fedora.setSpec.desc.dissType" value="info:fedora/*/SetInfo.xml"/>
+      <sysproperty key="driver.fedora.queryFactory" value="fedora.services.oaiprovider.ITQLQueryFactory"/>
+      <sysproperty key="driver.fedora.itemSetSpecPath" value="$item &lt;urn:test&gt; $setSpec"/>
+      <sysproperty key="driver.fedora.queryConnectionTimeout" value="10000"/>
+      <sysproperty key="driver.fedora.querySocketTimeout" value="10000"/>
+      <sysproperty key="driver.fedora.disseminationConnectionTimeout" value="10000"/>
+      <sysproperty key="driver.fedora.disseminationSocketTimeout" value="10000"/>
+      <test name="fedora.services.oaiprovider.TestFedoraOAIDriver"/>
+<!--
+      <test name="fedora.services.oaiprovider.TestResultCombiner"/>
+      <test name="fedora.services.oaiprovider.TestITQLQueryFactory"/>
+-->
+    </junit>
+  </target>
+	
+	<target name="liveTests" description="Run all live system tests" depends="testclasses">
+	
+		<junit printsummary="yes" fork="yes" forkmode="once" haltonfailure="yes" showoutput="true">
+		<formatter type="plain" usefile="false"/> 
+		<classpath refid="test.path"/>
+			<test name="fedora.services.oaiprovider.AllLiveTests"/>
+		</junit>
+	</target>
+
+  <target name="prep"
+          description="prepare for a build">
+    <mkdir dir="build"/>
+    <mkdir dir="dist"/>
+  </target>
+
+  <target name="clean"
+          description="remove all build-generated stuff">
+      <delete dir="build"/>
+      <delete dir="dist"/>
+  </target>
+</project>
