@@ -3,12 +3,13 @@ package escidoc.services.oaiprovider.saxhandler;
 import java.util.HashMap;
 
 import org.xml.sax.Attributes;
-import org.xml.sax.helpers.DefaultHandler;
 
 import escidoc.services.oaiprovider.EscidocSetInfo;
 
 public class SetDefinitionsHandler extends DefaultHandler {
    
+    private boolean behindElement = false;
+
     private boolean inElement = false;
     private boolean inDescription = false;
     private boolean inName = false;
@@ -19,7 +20,6 @@ public class SetDefinitionsHandler extends DefaultHandler {
     private String name;
     private String query;
     private String specification;
-    private String elementName;
     private HashMap<String,EscidocSetInfo> sets;
 
     private EscidocSetInfo set;
@@ -34,7 +34,7 @@ public class SetDefinitionsHandler extends DefaultHandler {
    
     public void startElement(
         String uri, String localName, String qName, Attributes attributes) {
-        this.elementName = localName;
+    	this.behindElement = false;
         if (localName.equals("set-definition")) {
             inElement = true; 
             recordsNumber++;
@@ -53,6 +53,7 @@ public class SetDefinitionsHandler extends DefaultHandler {
     }
 
     public void endElement(String uri, String localName, String qName) {
+    	this.behindElement = true;
         if (inElement) {
             if (localName.equals("description")) {
                 inDescription = false;   
@@ -83,6 +84,9 @@ public class SetDefinitionsHandler extends DefaultHandler {
 
     public void characters(char[] ch, int start, int length) {
         
+    	if (behindElement) {
+    		return;
+    	}
         if (inElement) {
             if (inDescription) {
                 if (this.description == null) {

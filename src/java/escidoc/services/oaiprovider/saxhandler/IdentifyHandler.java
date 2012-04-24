@@ -1,10 +1,11 @@
 package escidoc.services.oaiprovider.saxhandler;
 
 import org.xml.sax.Attributes;
-import org.xml.sax.helpers.DefaultHandler;
 
 public class IdentifyHandler extends DefaultHandler {
    
+    private boolean behindElement = false;
+
     private boolean inElement = false;
     private boolean inEarliestDate = false;
     private boolean inName = false;
@@ -25,6 +26,7 @@ public class IdentifyHandler extends DefaultHandler {
     public void startElement(
         String uri, String localName, String qName, Attributes attributes) {
         
+    	this.behindElement = false;
         if (qName.equals("entry")) {
             inElement = true; 
             String value = attributes.getValue("key");
@@ -42,6 +44,7 @@ public class IdentifyHandler extends DefaultHandler {
     }
 
     public void endElement(String uri, String localName, String qName) {
+    	this.behindElement = true;
         if (inElement) {
             if (inEarliestDate) {
                 inEarliestDate = false;   
@@ -58,6 +61,9 @@ public class IdentifyHandler extends DefaultHandler {
 
     public void characters(char[] ch, int start, int length) {
         
+    	if (behindElement) {
+    		return;
+    	}
         if (inElement) {
             if (inEarliestDate) {
                 if (this.earliestDate == null) {

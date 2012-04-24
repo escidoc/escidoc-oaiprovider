@@ -3,13 +3,14 @@ package escidoc.services.oaiprovider.saxhandler;
 import java.util.Vector;
 
 import org.xml.sax.Attributes;
-import org.xml.sax.helpers.DefaultHandler;
 
 import proai.SetInfo;
 import escidoc.services.oaiprovider.EscidocSetInfo;
 
 public class OuOrContextListHandler extends DefaultHandler {
     private String elementName;
+
+    private boolean behindElement = false;
 
     private boolean inElement = false;
 
@@ -53,6 +54,7 @@ public class OuOrContextListHandler extends DefaultHandler {
 
     public void startElement(
         String uri, String localName, String qName, Attributes attributes) {
+    	this.behindElement = false;
         this.elementName = qName;
         if (localName.equals("numberOfRecords")) {
             inNumberOfRecords = true;
@@ -92,6 +94,7 @@ public class OuOrContextListHandler extends DefaultHandler {
     }
 
     public void endElement(String uri, String localName, String qName) {
+    	this.behindElement = true;
         if (inElement) {
             if (this.elementName.equals("prop:description")) {
                 inDescription = false;   
@@ -129,6 +132,9 @@ public class OuOrContextListHandler extends DefaultHandler {
     }
 
     public void characters(char[] ch, int start, int length) {
+    	if (behindElement) {
+    		return;
+    	}
         if (inElement && inDescription) {
             if (this.description == null) {
                 this.description = new String(ch, start, length);

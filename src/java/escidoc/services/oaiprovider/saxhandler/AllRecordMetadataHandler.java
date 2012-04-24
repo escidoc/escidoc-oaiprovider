@@ -5,7 +5,6 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
-import org.xml.sax.helpers.DefaultHandler;
 
 import escidoc.services.oaiprovider.EscidocQueryFactory;
 
@@ -18,6 +17,8 @@ public class AllRecordMetadataHandler extends DefaultHandler {
     private String elementName;
 
     private boolean inElement = false;
+
+    private boolean behindElement = false;
 
     private String recordsNumber;
 
@@ -64,6 +65,7 @@ public class AllRecordMetadataHandler extends DefaultHandler {
 
     public void startElement(
         String uri, String localName, String qName, Attributes attributes) {
+    	this.behindElement = false;
         this.elementName = localName;
         if (localName.equals("record")) {
             inElement = true;
@@ -81,7 +83,7 @@ public class AllRecordMetadataHandler extends DefaultHandler {
     }
 
     public void endElement(String uri, String localName, String qName) {
-
+    	this.behindElement = true;
         if (localName.equals("record")) {
             inElement = false;
             this.resourceId = oaiIdPrefix + this.id;
@@ -126,6 +128,9 @@ public class AllRecordMetadataHandler extends DefaultHandler {
     }
 
     public void characters(char[] ch, int start, int length) {
+    	if (behindElement) {
+    		return;
+    	}
         if (inElement) {
             if (this.elementName.equals("id")) {
                 String id = new String(ch, start, length);

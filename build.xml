@@ -15,8 +15,6 @@
     <pathelement location="${lib.codec}"/>
     <pathelement location="${lib.logging}"/>
     <pathelement location="${lib.log4j}"/>
-    <pathelement location="${lib.xerces}"/>
-    <pathelement location="${lib.xml-apis}"/>
     <pathelement location="${lib.axis}"/>
     <pathelement location="${lib.activation}"/>
     <pathelement location="${lib.wsdl4j}"/>
@@ -200,7 +198,7 @@
 	</target>
 
   <target name="prep"
-          description="prepare for a build">
+          description="prepare for a build" depends="clean">
     <mkdir dir="build"/>
     <mkdir dir="dist"/>
   </target>

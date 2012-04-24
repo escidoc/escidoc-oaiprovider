@@ -4,11 +4,6 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
-import org.xml.sax.helpers.DefaultHandler;
-
-import proai.error.RepositoryException;
-
-import sun.nio.cs.ext.MacHebrew;
 
 public class SetMembersIdsHandler extends DefaultHandler {
     private static final Logger logger =
@@ -16,6 +11,8 @@ public class SetMembersIdsHandler extends DefaultHandler {
     
     private String oaiIdPrefix = "oai:escidoc.org:";
     
+    private boolean behindElement = false;
+
     private String elementName;
 
     private boolean inElement = false;
@@ -36,6 +33,7 @@ public class SetMembersIdsHandler extends DefaultHandler {
     }
     public void startElement(
         String uri, String localName, String qName, Attributes attributes) {
+    	this.behindElement = false;
         this.elementName = localName;
         if (localName.equals("record")) {
             inElement = true;
@@ -46,6 +44,7 @@ public class SetMembersIdsHandler extends DefaultHandler {
 
     public void endElement(String uri, String localName, String qName) {
 
+    	this.behindElement = true;
         if (localName.equals("record")) {
             inElement = false;
             resourceIds.add(oaiIdPrefix
@@ -56,6 +55,9 @@ public class SetMembersIdsHandler extends DefaultHandler {
     }
 
     public void characters(char[] ch, int start, int length) {
+    	if (behindElement) {
+    		return;
+    	}
         if (inElement) {
             if (this.elementName.equals("id")) {
                 String id = new String(ch, start, length);

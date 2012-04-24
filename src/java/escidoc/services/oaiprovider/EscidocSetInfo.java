@@ -56,7 +56,7 @@ public class EscidocSetInfo
     private void writeDescriptions(PrintWriter out) throws RepositoryException {
         if (this.m_setDescription != null && (this.m_setDescription.length() > 0)) {
             out.println("<setDescription>");
-            out.println("<oai_dc:dc xmlns:oai_dc=\"http://www.openarchives.org/OAI/2.0/\"");
+            out.println("<oai_dc:dc xmlns:oai_dc=\"http://www.openarchives.org/OAI/2.0/oai_dc/\"");
             out.println(" xmlns:dc=\"http://purl.org/dc/elements/1.1/\""); 
             out.println(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""); 
             out.println(" xsi:schemaLocation=\"http://www.openarchives.org/OAI/2.0/oai_dc/"); 
