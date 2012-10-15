@@ -1,13 +1,13 @@
-package de.fiz.karlsruhe.escidoc.services.oaiprovider;
+package org.escidoc.services.oaiprovider;
 
-import de.fiz.karlsruhe.cache.MetadataValidator;
-import de.fiz.karlsruhe.cache.ValidationInfo;
-import de.fiz.karlsruhe.cache.ValidationResult;
 import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
+import org.escidoc.services.oaiprovider.cache.MetadataValidator;
+import org.escidoc.services.oaiprovider.cache.ValidationInfo;
+import org.escidoc.services.oaiprovider.cache.ValidationResult;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import proai.MetadataFormat;

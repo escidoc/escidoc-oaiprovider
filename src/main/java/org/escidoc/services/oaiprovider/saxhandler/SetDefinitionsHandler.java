@@ -1,10 +1,10 @@
-package de.fiz.karlsruhe.escidoc.services.oaiprovider.saxhandler;
+package org.escidoc.services.oaiprovider.saxhandler;
 
 import java.util.HashMap;
 
+import org.escidoc.services.oaiprovider.EscidocSetInfo;
 import org.xml.sax.Attributes;
 
-import de.fiz.karlsruhe.escidoc.services.oaiprovider.EscidocSetInfo;
 
 public class SetDefinitionsHandler extends DefaultHandler {
    

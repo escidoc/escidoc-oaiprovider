@@ -1,4 +1,4 @@
-package de.fiz.karlsruhe.escidoc.services.oaiprovider.saxhandler;
+package org.escidoc.services.oaiprovider.saxhandler;
 
 /**
  * DefaultHandler that does not resolve dtds.

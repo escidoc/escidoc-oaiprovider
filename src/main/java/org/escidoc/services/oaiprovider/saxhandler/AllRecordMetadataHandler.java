@@ -1,12 +1,12 @@
-package de.fiz.karlsruhe.escidoc.services.oaiprovider.saxhandler;
+package org.escidoc.services.oaiprovider.saxhandler;
 
 import java.io.PrintWriter;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.escidoc.services.oaiprovider.EscidocQueryFactory;
 import org.xml.sax.Attributes;
 
-import de.fiz.karlsruhe.escidoc.services.oaiprovider.EscidocQueryFactory;
 
 public class AllRecordMetadataHandler extends DefaultHandler {
     private static final Logger logger =

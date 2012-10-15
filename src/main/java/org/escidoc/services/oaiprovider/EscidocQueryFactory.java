@@ -1,4 +1,4 @@
-package de.fiz.karlsruhe.escidoc.services.oaiprovider;
+package org.escidoc.services.oaiprovider;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,16 +24,16 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
+import org.escidoc.services.oaiprovider.saxhandler.AllRecordMetadataHandler;
+import org.escidoc.services.oaiprovider.saxhandler.IdentifyHandler;
+import org.escidoc.services.oaiprovider.saxhandler.OuOrContextListHandler;
+import org.escidoc.services.oaiprovider.saxhandler.SetDefinitionsHandler;
+import org.escidoc.services.oaiprovider.saxhandler.SetMembersIdsHandler;
 import org.xml.sax.SAXException;
 
 import proai.SetInfo;
 import proai.driver.RemoteIterator;
 import proai.error.RepositoryException;
-import de.fiz.karlsruhe.escidoc.services.oaiprovider.saxhandler.AllRecordMetadataHandler;
-import de.fiz.karlsruhe.escidoc.services.oaiprovider.saxhandler.IdentifyHandler;
-import de.fiz.karlsruhe.escidoc.services.oaiprovider.saxhandler.OuOrContextListHandler;
-import de.fiz.karlsruhe.escidoc.services.oaiprovider.saxhandler.SetDefinitionsHandler;
-import de.fiz.karlsruhe.escidoc.services.oaiprovider.saxhandler.SetMembersIdsHandler;
 import fedora.common.Constants;
 import fedora.server.utilities.DateUtility;
 

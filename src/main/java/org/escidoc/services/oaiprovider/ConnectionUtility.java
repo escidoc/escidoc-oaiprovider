@@ -1,4 +1,4 @@
-package de.fiz.karlsruhe.escidoc.services.oaiprovider;
+package org.escidoc.services.oaiprovider;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

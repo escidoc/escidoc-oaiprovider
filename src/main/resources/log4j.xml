@@ -9,19 +9,9 @@
     </layout>
   </appender>
 
-  <!-- Use this appender to have logs go to one big log file -->
-  <appender name="File" class="org.apache.log4j.FileAppender">
-    <param name="File" value="/tmp/proai.log"/>
-    <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%p %d{yyyy-MM-dd' 'HH:mm:ss.SSS} [%t] (%c{1}) %m%n"/>
-    </layout>
-  </appender>
-
-  <!-- Use this appender to have logs go to a rolling set of log files -->
-  <appender name="RollingFile" class="org.apache.log4j.RollingFileAppender">
-    <param name="File" value="/tmp/proai.log"/>
-    <param name="MaxFileSize" value="20MB"/>
-    <param name="MaxBackupIndex" value="5"/>
+  <appender name="RollingFile" class="org.apache.log4j.DailyRollingFileAppender">
+    <param name="datePattern" value="'.'yyyy-MM-dd" />
+    <param name="File" value="${ESCIDOC_HOME}/log/proai.log"/>
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="%p %d{yyyy-MM-dd' 'HH:mm:ss.SSS} [%t] (%c{1}) %m%n"/>
     </layout>
@@ -29,13 +19,13 @@
  
   <!-- Category-specific settings -->
   <category name="proai">
-    <priority value="DEBUG" />
+    <priority value="INFO" />
   </category>
  
   <!-- Default level and appender if not explicitly defined -->
   <root>
     <priority value="WARN" />
-    <appender-ref ref="Console"/>
+    <appender-ref ref="RollingFile"/>
   </root>
   
 </log4j:configuration>

@@ -1,11 +1,11 @@
-package de.fiz.karlsruhe.escidoc.services.oaiprovider.saxhandler;
+package org.escidoc.services.oaiprovider.saxhandler;
 
 import java.util.Vector;
 
+import org.escidoc.services.oaiprovider.EscidocSetInfo;
 import org.xml.sax.Attributes;
 
 import proai.SetInfo;
-import de.fiz.karlsruhe.escidoc.services.oaiprovider.EscidocSetInfo;
 
 public class OuOrContextListHandler extends DefaultHandler {
     private String elementName;

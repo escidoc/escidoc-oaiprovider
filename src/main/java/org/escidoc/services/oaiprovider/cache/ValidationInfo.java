@@ -1,4 +1,4 @@
-package de.fiz.karlsruhe.cache;
+package org.escidoc.services.oaiprovider.cache;
 
 public class ValidationInfo {
 

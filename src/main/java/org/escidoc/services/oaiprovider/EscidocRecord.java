@@ -1,4 +1,4 @@
-package de.fiz.karlsruhe.escidoc.services.oaiprovider;
+package org.escidoc.services.oaiprovider;
 
 import org.apache.log4j.Logger;
 
